@@ -14,37 +14,55 @@ cover: production-ready-testing.jpg
 
 ---
 
-Let's delve into the most crucial, non-negotiable aspect of *production-ready* systems: Testing.
+Early in my career, I joined a team that had extensive test coverage—hundreds of unit and functional tests with reasonable mocks. Management was proud of it. The metrics looked great. But when I started digging into the actual tests, I found something shocking: most of them didn't have assertions. They were testing that code ran, not that code worked correctly.
 
-In my experience, opinions on testing vary widely, but unfortunately, some undervalue its importance or worse, take it for granted. I firmly believe that tests are indispensable; they act as a safety net, catching bugs before they can wreak havoc on a production system.
-It may sound cliché, but this analogy accurately reflects reality.
-So, let's begin with some taxonomy. Testing realm is a big one, but before anything else, it is worth mentioning the big three: unit testing, functional testing, and integration testing. Each plays a distinct role, and I'll discuss them briefly.
+The codebase was in free fall for other reasons (years of accumulating debt), but the tests created a false sense of security. Everything looked fine on paper. The real problem: nobody was actually verifying anything.
 
-#### Unit Testing: The Building Blocks
+That experience taught me something critical: **a false sense of security is worse than no tests at all.**
 
-Unit testing zeroes in on the 'small stuff'. It isolates and tests individual components or functions of your application. Picture it as examining each brick for flaws before building a wall. It ensures that every code segment performs exactly as intended, no more, no less.
+This is what production-ready testing actually looks like.
 
-Practically, unit tests often employ [mocks](https://www.geeksforgeeks.org/software-engineering-mock-introduction/) to *isolate* a code piece from its surrounding functionality and in this way, well written unit tests are designed to test *only* the code that is supposed to be tested.
+## Why Testing Matters in Production Systems
 
-#### Functional Testing: The User’s Perspective
+When I worked on RavenDB, I learned that testing isn't about coverage percentages or test counts. It's about catching the bugs that break customers' data. A web app that crashes for 10 minutes? Bad. A database that silently corrupts data during replication? Catastrophic.
 
-At its core, functional testing is about looking at your application through the eyes of your users. It's not about digging into the code; instead, it's about asking, "Does this do what our users need?" Think of it as checking if the wall built from those bricks actually stands firm and does what it is supposed to.
+In production systems, tests are how you verify:
+- Consistency under distributed failures
+- Behavior under network partitions
+- Data integrity through edge cases
+- That your fix doesn't break something else
 
-We don't get tangled in the internals here. We treat the app as a black box - something where we're only concerned with what comes out, not how it’s done on the inside. This approach is key in making sure the app behaves as it's supposed to, based on what we've promised our users.
+Tests are your safety net. But only if they actually check for the right things.
 
-In practice, this often means mocking up 'external' services. Whether we're dealing with separate services in a microservice setup or just different modules in a single, monolithic application, we simulate parts not currently under test. This way, we can focus on how parts of our app interact and whether they live up to their promises in real-world scenarios.
+## The Three Types of Tests That Matter
 
-In short, functional testing is all about those user stories and scenarios. It’s like saying, "Alright, the user wants to do X. Can they do it smoothly and exactly as the product owner defined application behavior?" It’s not just checking off features; it’s ensuring these features work in the way our users and product owners expect them to.
+Let's start with the big three: unit testing, integration testing, and end-to-end testing. Each tests a different scope, and each catches different types of bugs.
 
-#### Integration Testing: The Big Picture
+#### Unit Testing: The Small Stuff
 
-Integration testing is where we see if our app's different parts play nice together. It's about making sure that when various bits of our code meet, they interact just as we expect them to. Imagine ensuring that all the walls, floors, and ceilings in a building fit together perfectly, creating a solid, well-functioning structure.
+Unit testing isolates and tests individual functions or components. It’s fast, targeted, and great for verifying that a specific piece of logic does what you expect.
 
-In an integration test, it’s like we’re firing up a mini-version of our real system. This could include a bunch of services and usually an **in-memory** database to keep things fast and simple. To pull this off, we might need to use console commands to spin up services or use specific language perks, like the ones in [.Net](https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0).
+Practically, unit tests use [mocks](https://www.geeksforgeeks.org/software-engineering-mock-introduction/) to isolate the code under test from its dependencies. A well-written unit test tests *only* one thing.
+
+The catch: unit tests can lie to you. Your function works perfectly in isolation but breaks when it touches the real world. At RavenDB, we had to learn that unit tests for query optimization don’t mean much if you don’t test the query planner talking to the storage engine.
+
+#### Integration Testing: Where Things Actually Work Together
+
+Integration testing is where you spin up multiple components and see if they actually work together. This is where you catch the bugs that unit tests miss—the off-by-one errors in pagination, the race conditions in concurrent writes, the subtle ordering bugs that only show up when components interact.
+
+In an integration test, you’re running a mini-version of your real system. This could be multiple services, a real (or in-memory) database, message queues—whatever your system actually needs to do its job.
 
 {% note info %}
-A quick heads-up: I've mentioned *in-memory* databases here. Sure, you could set up tests with regular, persistent databases, but using an in-memory database is like hitting the fast-forward button. It's quicker and cuts down on maintenance hassle. Keep in mind, though, not every database can do this in-memory trick. If yours can, it's definitely worth considering for your integration tests.
+**In-memory databases for testing:** You could set up integration tests with persistent databases, but in-memory databases are faster and simpler to set up/tear down. The tradeoff: they may not catch storage-layer bugs that your real database would catch. For production-critical systems, consider mixing both approaches.
 {% endnote %}
+
+#### End-to-End Testing: The Real World
+
+End-to-end testing is testing your system the way users actually use it. Not through unit test mocks, not through a test harness—through the actual API, with real network calls, real data flows.
+
+At RavenDB, E2E tests caught consistency issues that integration tests missed. They caught bugs where locally-optimized code broke under real network conditions. They caught edge cases that no unit test author would think to mock.
+
+E2E tests are slow and flaky if you’re not careful, but they’re the closest thing to production without actually being in production.
 
 #### Other Testing Types: Important But Situational
 
@@ -55,49 +73,94 @@ Beyond the big three of unit, functional, and integration testing, there are man
 * **Automated Testing (automated UI testing):** A form of black-box testing where user activities are automated and UI interactions like button clicks are simulated. It's essential for repetitive tasks and a cornerstone of modern CI/CD pipelines.
 * **Usability Testing:** Focuses on ensuring your app is intuitive and user-friendly. It's what differentiates a seamless user experience from a frustrating one.
 
-#### Crafting Tests That Truly Matter
+## What Tests Actually Need to Do
 
-I remember joining a company that bragged about their 3,000 tests and stellar test coverage. But here’s the kicker: overwhelming majority of those tests didn't have [assertions](https://en.wikipedia.org/wiki/Test_assertion)! They were like runners in a race without a finish line – going through the motions but not really achieving anything. This might be an extreme example, but it's a perfect reminder that quantity doesn't always mean quality in testing.
+Here’s the critical part: **a test without assertions isn’t a test. It’s just code running.**
 
-{% note info %}
-In case you are new to this whole thing, here's the deal with assertions:
+That team with hundreds of tests but no assertions was running through the motions without actually checking anything. The builds passed. Management was happy. But when you dug into the actual test files, you found lines like:
 
-* Think of assertions in tests like checkpoints in a race. They're your reality check, confirming whether the code is performing as expected. For example, after a function runs, an assertion checks if the outcome is what you anticipated.
-* A test without assertions might show that your code runs, but it doesn’t confirm it’s doing the right thing. It's like saying, "Hey, the engine's running!" without checking if the car is moving forward.
-* Running a test sans assertion is akin to cooking a meal without tasting it. You might follow the recipe flawlessly, but you'll never know if it actually tastes good.
-{% endnote %}
+```csharp
+var result = MyFunction(input);
+// TODO: verify result
+```
 
-First, it is worth mentioning the design pattern we should be writing our tests with. Enter AAA pattern: Arrange, Act, Assert. Along with his cousin, the *given-when-then* pattern from **Behavior-Driven Development (BDD)**, these patterns ensure tests are not just about code, but about fulfilling user expectations.
+Or worse: tests that called code but never checked the output. No assertions. No verification. Just "it didn’t crash, so it must work."
 
-For instance, consider a user story where a user logs into a system. The 'Arrange' part sets up the test environment, 'Act' involves the user entering their credentials, and 'Assert' checks if the system successfully logs them in. This structure ensures that each test is focused, clear, and relevant to user needs.
+An [assertion](https://en.wikipedia.org/wiki/Test_assertion) is your reality check. It says: "I ran the code, and here’s what I expected to happen." Without it, you’re not testing—you’re just exercising code paths.
 
-{% note info %}
-New to BDD? No worries, I'll dive deeper into it later in the post.
-{% endnote %}
+## Test Structure: Arrange, Act, Assert
 
-One crucial thing in testing: focus on a minimal scope. Imagine tests as a microscope, zooming in to reveal the nitty-gritty of a specific code segment or functionality. Keeping tests narrow and focused helps in pinpointing issues precisely. Whether it’s a unit, functional, or integration test, zooming in on one aspect makes for easier troubleshooting and maintenance.
+When you write a test, follow this pattern:
 
-With complex systems, testing too many things at once can be like finding a needle in a haystack. By focusing narrowly, you make your life a lot easier when something goes awry.
+1. **Arrange:** Set up your test environment (create objects, mock dependencies, set initial state)
+2. **Act:** Call the code you’re testing
+3. **Assert:** Verify the result is what you expected
 
-Then there’s regression testing, our unsung hero. Ever squashed a bug and then another pops up, laughing in your face? Regression testing is your shield against this. After fixing something or tweaking a feature, it ensures the rest of your system isn’t thrown out of whack.
+This pattern (called **AAA**) keeps tests focused and readable. Each test should test one thing and verify one outcome.
 
-And let's talk about 'happy path' testing. It's like walking through a garden on a sunny day - everything's perfect, no hiccups. But, just like a garden isn't always sunny, our code isn’t always on its best behavior. Testing only the happy paths is like preparing for good weather without considering the chance of rain. Sure, starting with the happy path is common, but it's crucial to also venture down the 'unhappy paths'. These are the less-than-ideal scenarios – handling invalid inputs, dealing with timeouts, or managing unexpected errors.
+## Testing Beyond Happy Paths
 
-By including these scenarios, we build a comprehensive test strategy that’s ready for anything. Think of it as having both sunglasses and an umbrella – being prepared for both the sunny days and the stormy ones. Aiming for around 80% code coverage is realistic, but remember, it’s not just about hitting numbers. It's more important to focus on how effective your tests are, ensuring they cover the full spectrum of what could go right and wrong.
+Most developers start by testing the happy path—the scenario where everything works correctly. It’s natural. But production doesn’t care about happy paths.
 
-Lastly, balancing unit and integration tests is key. Too many unit tests, and you might find yourself swamped every time there's a minor code change. As your test suite expands, mixing in integration tests can save you time and hassle. They’re more about the big picture and can be less maintenance-heavy, letting you focus on building great stuff rather than constantly tweaking tests. Remember, in the world of development, time is gold.
+In production systems, you need to test:
+- **Invalid inputs** — what happens if someone passes null, negative numbers, or strings that are too long?
+- **Timeouts and failures** — what happens when a network call fails, or takes 30 seconds instead of 30ms?
+- **Concurrent access** — what happens when two requests try to modify the same data simultaneously?
+- **Edge cases and boundaries** — off-by-one errors, empty collections, maximum values
 
-#### A Word Or Three About Testing Methodologies
+At RavenDB, we spent as much time testing failure scenarios as we did testing the happy path. Node crashes, network partitions, disk full, corrupted data—these are the tests that catch real bugs.
 
-Let's briefly explore a couple of important testing methodologies, particularly **Behavior-Driven Development (BDD)** and **Test-Driven Development (TDD)**, which have become ubiquitous in modern software engineering.
+## Test Scope and Focus
 
-BDD and TDD are distinct yet complementary approaches. BDD, which evolved from the principles of TDD, is all about the user's interaction with the system. It involves starting with *user stories* ("As a user, I want...") and translating these narratives into specific tests. This approach ensures the software aligns perfectly with the user's needs and expectations. For example, in BDD, a test for a login feature would directly validate the user's ability to enter credentials and access the dashboard.
+A common mistake: tests that are too broad. A test that sets up an entire system, modifies 10 different things, and checks 5 outcomes is a test that fails for 5 different reasons. When it breaks, you don’t know which part is wrong.
 
-TDD, meanwhile, adopts a more code-centric approach. Here, the journey begins with writing a test for a specific function before even writing the function itself. The process follows a rhythmic cycle: write a test, watch it fail, develop the code to pass the test, and then refactor. Picture a TDD scenario for creating a calculator app, where the initial test for an 'add' function sets the stage for the actual coding and subsequent refinement.
+Keep tests narrow. Each test should test one thing. If a test has multiple assertions, they should all be checking the same behavior from different angles.
 
-Though different in their approach, both BDD and TDD significantly contribute to creating robust, user-focused software. They reinforce the importance of testing in not just catching bugs, but shaping the software's development from the ground up.
+## Test Coverage: The Right Metric
 
-Apart from these, there are other methodologies like **Acceptance Test-Driven Development (ATDD)**, which extends TDD by involving client stakeholders in the testing process, and **Exploratory Testing**, where testers actively engage with the software to uncover unexpected behaviors or bugs without predefined tests.
+Aiming for around 80% code coverage is realistic and reasonable. But don’t obsess over the number. Coverage measures whether you ran the code—not whether your tests actually verify it works correctly.
+
+The team that bragged about 100% coverage but had no assertions? Useless. A team with 60% coverage where every test has real assertions and real verification? Much safer.
+
+Focus on:
+- **Are your tests actually verifying outcomes?** (Assertions matter)
+- **Are you testing edge cases and failure modes?** (Not just happy paths)
+- **Do your tests catch regressions?** (When you change something, do tests fail?)
+
+## Balancing Test Types
+
+Too many unit tests and you’re maintaining brittle tests every time you refactor internals. Too many integration tests and your test suite runs forever.
+
+The practical balance depends on your system:
+- **Libraries and low-level systems** — more unit tests (they’re the public interface)
+- **Web applications** — mix of unit and integration
+- **Distributed systems** — heavy on integration and E2E (real-world interactions matter more than internal implementation)
+
+At RavenDB, integration and E2E tests caught more real bugs than unit tests did. The distributed nature meant that internal correctness wasn’t enough—you had to test the system as a whole.
+
+## Testing Methodologies: TDD vs. BDD
+
+**Test-Driven Development (TDD)** means writing tests before you write the code. You write a test, watch it fail, then write code to make it pass. The idea is that you're forced to think about what you're building before you build it.
+
+Does TDD work? In my experience, yes—for some problems. It's great when you have a clear specification and you're building something well-scoped. It forces you to think about edge cases early. But it's also easy to write tests that are too tightly coupled to your implementation, making refactoring painful.
+
+**Behavior-Driven Development (BDD)** is similar but focuses on the *behavior* rather than the implementation. You write tests that describe what the system should do ("When I query with this parameter, I should get these results"), not how it should do it. This helps keep tests focused on outcomes rather than implementation details.
+
+Both approaches have merit. The key is: **write tests that verify behavior, not implementation. That way, your tests stay valuable even as you refactor the code.**
+
+## The Real Cost of Bad Testing
+
+That team I mentioned at the start—hundreds of tests, no assertions, green builds across the board? They were building on quicksand. Every deployed change was a gamble. Bugs that should have been caught by tests made it to production.
+
+The false sense of security was worse than having no tests at all. Because at least with no tests, you're nervous. You know you're taking risks. With bad tests, you're confident—and wrong.
+
+Production-ready testing means:
+- Tests that actually verify outcomes (with assertions)
+- Tests that cover failure modes, not just happy paths
+- Tests at the right scope (unit for components, integration for systems, E2E for user flows)
+- Tests you trust enough to deploy based on
+
+That's what separates systems that survive 2am incidents from systems that collapse.
 
 ## Series Roadmap
 
@@ -110,4 +173,4 @@ Apart from these, there are other methodologies like **Acceptance Test-Driven De
 
 ## What's Next?
 
-Next, we will briefly explore the crucial yet often overlooked aspects of *production-ready* software, including security, scalability, and documentation.
+Next, we'll explore memory dumps—your window into production crashes when everything else fails.
