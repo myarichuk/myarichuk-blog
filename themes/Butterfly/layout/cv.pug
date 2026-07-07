@@ -1,7 +1,8 @@
 extends includes/layout.pug
 
 block content
-  style.
+  #page
+    style.
     :root {
       --bg:           #F5F7FA;
       --surface:      #FFFFFF;
@@ -643,18 +644,18 @@ block content
               span.pill Storage engine internals
               span.pill Compile-time codegen
 
-  script.
-    (function() {
-      const rail = document.getElementById('hexRail');
-      const height = window.innerHeight;
-      const itemHeight = 14 + 14;
-      const count = Math.floor(height / itemHeight) + 4;
-      let addr = 0xA000;
-      for (let i = 0; i < count; i++) {
-        const el = document.createElement('div');
-        el.className = 'hex-addr';
-        el.textContent = '0x' + addr.toString(16).toUpperCase().padStart(4, '0');
-        rail.appendChild(el);
-        addr += 0x0013 + (i % 3 === 0 ? 0x0006 : 0);
-      }
-    })();
+    script.
+      (function() {
+        const rail = document.getElementById('hexRail');
+        const height = window.innerHeight;
+        const itemHeight = 14 + 14;
+        const count = Math.floor(height / itemHeight) + 4;
+        let addr = 0xA000;
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          el.className = 'hex-addr';
+          el.textContent = '0x' + addr.toString(16).toUpperCase().padStart(4, '0');
+          rail.appendChild(el);
+          addr += 0x0013 + (i % 3 === 0 ? 0x0006 : 0);
+        }
+      })();
