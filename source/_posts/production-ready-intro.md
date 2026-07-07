@@ -13,13 +13,13 @@ top_img: /2023/11/14/production-ready-intro/production_ready_background.jpg
 cover: /2023/11/14/production-ready-intro/production_ready_background.jpg
 ---
 
-In the tech world, the term 'production-ready' often gets tossed around, sometimes more like a hot potato than a clear standard. But what does it really mean? It seems like everyone has their own take, often shrouded in personal biases or cloaked in industry jargon.
+For over a decade, I've worked on systems where production failures aren't theoretical—where you debug crashes at 2am, optimize under real load, and understand exactly how things break at scale. I spent seven years on the core team at Hibernating Rhinos working on RavenDB's core systems—the Voron B-Tree storage engine, server components, and direct customer production support. Then I spent 6+ years applying and refining those lessons across different companies and scales.
 
-In this post series, I will try to cut through the fluff and the corporate speak, because, let's be honest, best practices do not have to be complex or hard to understand.
+This series is what that experience taught me. Not theory. Not best practices you read somewhere else. The real patterns—what separates systems that survive chaos from systems that collapse under pressure.
 
 ## The Essence of Production-Readiness
 
-Before anything else, *production-ready- software isn't about having the most cutting-edge tech stack or the flashiest features. It's about reliability, stability, and readiness. Think of it as the difference between a flashy sci-fi concept car and a trusty, well-oiled workhorse vehicle that you'd confidently take on a cross-country road trip.
+*Production-ready* software isn't about having the most cutting-edge tech stack or the flashiest features. It's about reliability, stability, and readiness. Think of it as the difference between a flashy sci-fi concept car and a trusty, well-oiled workhorse vehicle that you'd confidently take on a cross-country road trip.
 
 ### The Non-Negotiables of Production-Ready Software
 
