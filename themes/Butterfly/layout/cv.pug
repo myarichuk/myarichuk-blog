@@ -1,0 +1,306 @@
+extends includes/layout.pug
+
+block content
+  style
+    include ../../source/cv/cv.css
+
+  .hex-rail#hexRail
+
+  main.cv-main
+    // Header
+    header
+      .name Michael Yarichuk
+      .title-line Senior Software Engineer &nbsp;·&nbsp; Systems &amp; Performance &nbsp;·&nbsp; .NET
+      .contact-row
+        a(href="mailto:michael.yarichuk@gmail.com") michael.yarichuk@gmail.com
+        span +972-54-596-7649
+        a(href="https://linkedin.com/in/myarichuk" target="_blank") linkedin.com/in/myarichuk
+        a(href="https://github.com/myarichuk" target="_blank") github.com/myarichuk
+        a(href="https://www.graymatterdeveloper.com" target="_blank") graymatterdeveloper.com
+
+    // Two-column body
+    .layout
+      // Left: main content
+      .content-main
+
+        // Profile
+        .section
+          .section-label Profile
+          p.profile-text
+            | Senior software engineer and systems programmer with 13+ years of .NET experience,
+            | specialising in high-performance and low-level engineering: zero-allocation patterns,
+            | database storage internals, crash and core dump analysis, and memory subsystem design.
+            | Spent seven years contributing to RavenDB and its Voron B-Tree storage engine at
+            | Hibernating Rhinos. Builds production libraries benchmarked against hand-optimised baselines.
+            | Autodidact since age&nbsp;12 — the kind who goes straight to the source: RBIL, processor manuals, WinDbg.
+
+        // Experience
+        .section
+          .section-label Experience
+
+          // Stealth Startup
+          .entry
+            .entry-header
+              .entry-company Stealth Startup&nbsp;
+                span(style="font-weight:400;color:var(--text-3);font-size:13px;") (Cybersecurity)
+              .entry-period 2022 – present
+            .entry-stack .NET 6/7/8 · C# · Docker · containerised microservices on-prem · Node.js
+            .entry-note Company name and product details are NDA/MoD export-constrained. Listed as "stealth startup" on LinkedIn at company's request.
+
+            .sub-phase Team Lead / Engineering Manager &nbsp;—&nbsp; 2022–2023
+            ul
+              li Managed a small agile team: goal-setting, KPIs, sprint planning, code reviews, and mentoring 3–4 engineers across .NET and Node.js stacks
+              li Stayed hands-on throughout — no pure-management overhead; continued designing and shipping features in parallel
+              li After ~1.5 years, transitioned to Tech Lead by mutual agreement — IC contribution was the higher-leverage use of time
+
+            .sub-phase(style="margin-top:14px;") Tech Lead / Senior Backend Engineer &nbsp;—&nbsp; 2023–present
+            ul
+              li Technical lead for an on-premises containerised .NET microservice platform; responsible for architectural decisions, cross-service integration design, and performance strategy
+              li Sole engineer with Node.js experience on the team — took full ownership of the Node.js service: feature development, maintenance, performance work, and production incidents
+              li Post-mortem investigation of production
+                strong hangs
+                |  and
+                strong managed memory leaks
+                |  — including timer-queue-rooted
+                code CancellationTokenSource
+                |  leaks and finalizer-thread starvation — using WinDbg/SOS and memory heap snapshots
+              li Triaged
+                strong SELECT N+1
+                |  issues across microservice boundaries; identified query fan-out patterns causing latency spikes under real production load
+              li Established BenchmarkDotNet-based benchmarking culture; systematically identified and eliminated allocation hotspots in hot-path .NET services
+
+          // Snyk
+          .entry
+            .entry-header
+              .entry-company Snyk
+              .entry-period 2021 – 2022
+            .entry-role Senior Backend Software Developer
+            .entry-stack TypeScript · Node.js · .NET · dependency graph analysis
+            ul
+              li Contributed to open-source dependency scanning across three language ecosystems:
+                strong .NET
+                |  (NuGet,
+                code .csproj
+                | /lock file resolution),
+                strong Python
+                |  (pip,
+                code requirements.txt
+                | , Poetry,
+                code pyproject.toml
+                | ), and
+                strong Node.js
+                |  (npm/yarn, transitive resolution)
+              li Navigated and extended a large-scale legacy TypeScript codebase; maintained correctness of multi-layer dependency graph resolution logic under active feature development
+
+          // Gigya/SAP
+          .entry
+            .entry-header
+              .entry-company Gigya / SAP
+              .entry-period 2020 – 2022
+            .entry-role Senior Backend Software Developer
+            .entry-stack .NET · C# · microservices · identity management at scale
+            ul
+              li Designed and built features across a high-volume microservice platform handling millions of identity events per day
+              li Performance analysis and post-mortem investigation of production issues; full-stack work spanning backend services and internal tooling
+
+          // Hibernating Rhinos
+          .entry
+            .entry-header
+              .entry-company Hibernating Rhinos
+              .entry-period 2013 – 2020
+            .entry-role Server/Client Developer · Support Engineer
+            .entry-stack .NET · C# · RavenDB · Voron B-Tree storage engine · LMDB · memory-mapped I/O
+            ul
+              li One of the longest-tenured engineers on the RavenDB core team —
+                span.ach 7 years
+                |  on a production NoSQL database and its storage engine
+              li Implemented and maintained features in the
+                strong Voron
+                |  B-Tree storage engine: tree structure, transaction management, memory-mapped I/O, page management
+              li Designed and built client-side and server-side API components across multiple RavenDB major versions; worked across the full stack from the wire protocol down to storage
+              li Provided direct technical support to enterprise customers; diagnosed and resolved storage-layer bugs under production pressure
+
+          // Early Career
+          .entry
+            .entry-header
+              .entry-company Early Career
+              .entry-period 2010 – 2013
+            .entry-note(style="margin-top:4px;")
+              | Junior developer roles including internal tooling and web development;
+              | concurrent with intensive self-directed study in systems programming and .NET internals.
+
+        // Education
+        .section
+          .section-label Education
+          .edu-inst Technion – Israel Institute of Technology
+          .edu-detail Physics B.Sc. &nbsp;·&nbsp; Attended ~4 semesters, did not complete &nbsp;·&nbsp; Left to work; family financial constraints
+          .int13h
+            strong Self-taught since ~age 12.
+            br
+            | 12th-grade final project: a fully self-implemented paint application in C++ under DOS —
+            | trigonometry-based shape rendering,
+            strong INT 10h, AX=0x0013
+            |  (320×200, 256 colour),
+            | writing pixels directly into VGA framebuffer memory at
+            strong 0xA000:0000
+            | .
+            br
+            | No libraries. No tutorials. Just Peter Norton's book, the RBIL, a compiler, and a lot of time.
+
+        // Personal Projects
+        .section
+          .section-label Projects
+
+          .project
+            .project-name
+              a(href="https://github.com/myarichuk/SharpArena" target="_blank") SharpArena
+            .project-desc
+              | Zero-allocation arena allocator for high-performance .NET. Linked-list-of-segments bump allocator
+              | backed by
+              code NativeMemory
+              | , with built-in collections:
+              code ArenaList&lt;T&gt;
+              | ,
+              |
+              code ArenaPtrStack&lt;T&gt;
+              | ,
+              code ArenaUtf16String
+              |  (content-based equality, zero managed allocation).
+              | Ships with a symbolic math parser as a real-world stress test.
+              | Fully compatible with
+              strong Blazor WebAssembly
+              |  — no virtual memory APIs in the hot path.
+              | 53 releases.
+
+          .project
+            .project-name
+              a(href="https://github.com/myarichuk/MongoZen" target="_blank") MongoZen
+            .project-desc
+              | Identity Map + Unit of Work ORM for MongoDB in .NET.
+              | Roslyn source generators wire up
+              code DbSet&lt;T&gt;
+              |  at compile time — zero reflection on the hot path.
+              | Change tracking uses an unmanaged arena-backed diffing engine with a zero-alloc
+              code DocId
+              |  discriminated union fingerprint struct.
+              | Benchmarked against hand-optimised raw driver code:
+              |
+              span.ach ~50–100× faster
+              |  on repeated reads (Identity Map cache),
+              |
+              span.ach 33% faster and 7% less allocated
+              |  on ReadAndModify vs. hand-written
+              code BulkWrite
+              | .
+
+          .project
+            .project-name
+              a(href="https://github.com/myarichuk/campaignvault" target="_blank") CampaignVault
+              span.project-tag WIP
+            .project-desc
+              | AI-assisted D&amp;D campaign management tool — session tracking, NPC and world-state consistency,
+              | AI-driven narrative assistance. Exploring multi-agent orchestration for DM support workflows.
+
+        // Writing
+        .section
+          .section-label Writing
+          p.profile-text
+            a(href="https://www.graymatterdeveloper.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--pill-border);") graymatterdeveloper.com
+            |  — 33 posts covering .NET debugging and post-mortem analysis, production systems engineering,
+            | performance profiling, design patterns, and C++ internals.
+            | Highlights include a multi-part
+            em Production-Ready
+            |  series (memory dump tooling, structured logging,
+            | performance metrics, testing strategy) and hands-on debugging write-ups.
+            | Cadence is uneven — a daughter recently arrived who has discovered that closing a laptop lid is the most effective scheduling mechanism available to her.
+
+        // Interests
+        .section
+          .section-label Interests
+          .interests
+            | Systems programming for fun. Fantasy &amp; sci-fi literature. Strategy games — chess, 4X, CRPGs.
+            | TTRPGs; currently building tooling for them.
+
+      // Right: sidebar
+      aside.sidebar
+
+        .section
+          .section-label Languages
+          .skill-group
+            .pills
+              span.pill.accent C#
+              span.pill.accent .NET
+              span.pill C++
+              span.pill TypeScript
+              span.pill Node.js
+
+        .section
+          .section-label Low-level .NET
+          .skill-group
+            .pills
+              span.pill.accent Span&lt;T&gt;
+              span.pill.accent NativeMemory
+              span.pill unsafe code
+              span.pill stackalloc
+              span.pill unmanaged generics
+              span.pill struct layout
+              span.pill pinned memory
+              span.pill memory-mapped I/O
+
+        .section
+          .section-label Platform
+          .skill-group
+            .pills
+              span.pill .NET Core
+              span.pill .NET 6–10
+              span.pill Blazor WASM
+              span.pill ASP.NET Core
+              span.pill WCF
+
+        .section
+          .section-label Databases
+          .skill-group
+            .pills
+              span.pill.accent Voron (B-Tree)
+              span.pill.accent RavenDB
+              span.pill MongoDB
+              span.pill MS-SQL
+
+        .section
+          .section-label Tooling
+          .skill-group
+            .pills
+              span.pill Roslyn Source Gen
+              span.pill BenchmarkDotNet
+              span.pill WinDbg / SOS
+              span.pill Testcontainers
+              span.pill Docker
+              span.pill Git
+
+        .section
+          .section-label Specialisations
+          .skill-group
+            .pills
+              span.pill.accent Zero-alloc design
+              span.pill.accent Perf profiling
+              span.pill Crash dump analysis
+              span.pill Core dump analysis
+              span.pill Concurrent systems
+              span.pill Storage engine internals
+              span.pill Compile-time codegen
+
+  script.
+    (function() {
+      const rail = document.getElementById('hexRail');
+      const height = window.innerHeight;
+      const itemHeight = 14 + 14;
+      const count = Math.floor(height / itemHeight) + 4;
+      let addr = 0xA000;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'hex-addr';
+        el.textContent = '0x' + addr.toString(16).toUpperCase().padStart(4, '0');
+        rail.appendChild(el);
+        addr += 0x0013 + (i % 3 === 0 ? 0x0006 : 0);
+      }
+    })();

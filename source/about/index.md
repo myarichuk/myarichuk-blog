@@ -22,4 +22,4 @@ This blog isn’t about climbing the ladder or collecting followers. It’s abou
 
 If you’ve got ideas, feedback, or you just want to talk systems engineering, debugging, or why your allocator is hot—reach out. I love this stuff.
 
-Check out my [GitHub](https://github.com/myarichuk) and my [CV](https://www.graymatterdeveloper.com/cv/) if you want to see what I’ve built.
+Check out my [GitHub](https://github.com/myarichuk) and my [CV](/cv/) if you want to see what I’ve built.
