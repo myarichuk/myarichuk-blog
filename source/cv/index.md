@@ -9,7 +9,7 @@ top_img: false
 
 Senior Software Engineer · Systems & Performance · .NET
 
-michael.yarichuk@gmail.com | +972-54-596-7649 | [linkedin.com/in/myarichuk](https://linkedin.com/in/myarichuk) | [github.com/myarichuk](https://github.com/myarichuk) | [graymatterdeveloper.com](https://www.graymatterdeveloper.com)
+[linkedin.com/in/myarichuk](https://linkedin.com/in/myarichuk) | [github.com/myarichuk](https://github.com/myarichuk) | [graymatterdeveloper.com](https://www.graymatterdeveloper.com)
 
 ---
 
@@ -134,3 +134,19 @@ AI-assisted D&D campaign management tool — session tracking, NPC and world-sta
 ### Interests
 
 Systems programming for fun. Fantasy & sci-fi literature. Strategy games — chess, 4X, CRPGs. TTRPGs; currently building tooling for them.
+
+---
+
+### Get in Touch
+
+Have a project in mind or want to discuss systems engineering, debugging, or performance optimization? Send me a message.
+
+<!-- TODO: Add Formspree contact form here when theme supports it (planned for NexT migration) -->
+
+```
+Name:
+Email:
+Message:
+
+[Send]
+```
