@@ -1,8 +1,362 @@
 extends includes/layout.pug
 
 block content
-  style
-    include ../../../../source/cv/cv.css
+  style.
+    :root {
+      --bg:           #F5F7FA;
+      --surface:      #FFFFFF;
+      --text-1:       #1C2B3A;
+      --text-2:       #5A6E85;
+      --text-3:       #8899AA;
+      --accent:       #1A56DB;
+      --achievement:  #0B7A45;
+      --pill-bg:      #EEF3FA;
+      --pill-border:  #C2D2E4;
+      --rule:         #DDE5EE;
+      --hex-color:    #C8D5E0;
+      --gutter:       60px;
+      --side-w:       268px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      font-size: 14px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── Hex gutter ─────────────────────────────────── */
+    .hex-rail {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--gutter);
+      height: 100vh;
+      overflow: hidden;
+      background: var(--surface);
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0;
+      gap: 14px;
+      z-index: 100;
+    }
+
+    .hex-addr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: var(--hex-color);
+      line-height: 1;
+      writing-mode: horizontal-tb;
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+
+    /* ── Main content ───────────────────────────────── */
+    .cv-main {
+      margin-left: var(--gutter);
+      padding: 52px 60px 80px 60px;
+      max-width: 1080px;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      margin-bottom: 44px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .name {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      line-height: 1.05;
+      color: var(--text-1);
+    }
+
+    .title-line {
+      margin-top: 7px;
+      font-size: 14.5px;
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: 0.01em;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 22px;
+      margin-top: 18px;
+    }
+
+    .contact-row a,
+    .contact-row span {
+      font-size: 12.5px;
+      color: var(--text-2);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.15s;
+    }
+
+    .contact-row a:hover { color: var(--accent); }
+
+    /* ── Body layout ────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr var(--side-w);
+      gap: 52px;
+      align-items: start;
+    }
+
+    /* ── Section label ──────────────────────────────── */
+    .section { margin-bottom: 38px; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-3);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── Employment entries ─────────────────────────── */
+    .entry { margin-bottom: 30px; }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 2px;
+    }
+
+    .entry-company {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .entry-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .entry-role {
+      font-size: 12.5px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .entry-stack {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .entry-note {
+      font-size: 11.5px;
+      color: var(--text-3);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .sub-phase {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.01em;
+    }
+
+    .entry ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .entry ul li {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 5px;
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.55;
+    }
+
+    .entry ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--rule);
+      font-size: 11px;
+      top: 1px;
+    }
+
+    .ach { color: var(--achievement); font-weight: 600; }
+
+    /* ── Skills sidebar ─────────────────────────────── */
+    .sidebar { position: sticky; top: 24px; }
+
+    .skill-group { margin-bottom: 22px; }
+
+    .skill-group-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-3);
+      margin-bottom: 9px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .pill {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 3px;
+      padding: 2px 8px;
+      color: var(--text-2);
+      line-height: 1.8;
+    }
+
+    .pill.accent {
+      border-color: #9AB8F0;
+      background: #EBF1FD;
+      color: var(--accent);
+    }
+
+    /* ── Profile ────────────────────────────────────── */
+    .profile-text {
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.75;
+    }
+
+    /* ── Education ──────────────────────────────────── */
+    .edu-inst {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .edu-detail {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 3px;
+    }
+
+    .int13h {
+      margin-top: 14px;
+      padding: 13px 16px;
+      background: var(--pill-bg);
+      border-left: 2.5px solid var(--accent);
+      border-radius: 0 3px 3px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.8;
+    }
+
+    .int13h strong {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+
+    /* ── Projects ───────────────────────────────────── */
+    .project { margin-bottom: 22px; }
+
+    .project-name {
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .project-name a {
+      color: var(--text-1);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .project-name a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .project-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #9B6900;
+      background: #FFF4D6;
+      border: 1px solid #F0D080;
+      border-radius: 2px;
+      padding: 1px 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    /* ── Interests ──────────────────────────────────── */
+    .interests {
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    /* ── Print ──────────────────────────────────────── */
+    @media print {
+      .hex-rail { display: none; }
+      .cv-main { margin-left: 0; padding: 24px 36px 48px; max-width: none; }
+      .sidebar { position: static; }
+      body { background: white; font-size: 12px; }
+      .layout { gap: 36px; grid-template-columns: 1fr 220px; }
+      .name { font-size: 28px; }
+      .section { margin-bottom: 24px; }
+      .entry { margin-bottom: 20px; }
+    }
+
+    @media (max-width: 768px) {
+      .hex-rail { display: none; }
+      .cv-main { margin-left: 0; padding: 32px 24px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
 
   .hex-rail#hexRail
 
