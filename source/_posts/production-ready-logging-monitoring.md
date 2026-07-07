@@ -13,17 +13,37 @@ top_img: production-ready-2.jpg
 cover: production-ready-2.jpg
 ---
 
-Hey there! In the [previous post](https://www.graymatterdeveloper.com/2023/11/11/production-ready-intro/) of the series, we introduced the concept of *production-ready* software and mentioned that there are several non-negotiable elements that must be present in such a system.
+At RavenDB, I spent nights debugging failures where logs and monitoring seemed to contradict each other. One said "disk queue is dangerously high." The other said "1,000 backups just started simultaneously." Here's what I learned: they were both right, and together they told the whole story. Separately, they would have buried me for hours.
 
-So, let's take a look at the first non-negotiable - the unsung heroes of any software system. [Structured logging](https://www.atatus.com/glossary/structured-logging/) and [Monitoring](https://www.digitalocean.com/community/tutorials/an-introduction-to-metrics-monitoring-and-alerting).
+Let me show you what happened, because this is why structured logging and monitoring aren't optional—they're how you survive production.
 
-*Oh, but we have logging; it's just some text that we print when stuff happens. Why complicate things?*, you might ask. *And monitoring? Why would we need that? We have already a testing suite, so there is no problem...*
+## The Story: 1,000 Simultaneous Backups
 
-Sound familiar? Me? I've been there. If you've heard this from a fellow developer, your team leader or even worse, caught yourself saying it, I would say it's time for a serious perspective shift. [Structured logging](https://www.atatus.com/glossary/structured-logging/) and [monitoring](https://www.digitalocean.com/community/tutorials/an-introduction-to-metrics-monitoring-and-alerting) are more than just a tedious task or an item on a review checklist. Let's take a look why. And before we continue, I think it's important to mention that what I write here is not a 'silver bullet'. There may be cases where the cost of implementing and maintaining such solutions are bigger than the value they would provide. Always be mindful of development costs :)
+A customer called with a strange problem: their server-wide backup was failing. The machine had plenty of disk space, plenty of CPU, plenty of RAM. Nothing was obviously overloaded. But backups kept timing out.
+
+I started with the monitoring dashboard. One metric jumped out immediately: **Disk Queue Length was sky-high**. The disk wasn’t saturated—it was thrashing. Something was pounding it relentlessly.
+
+Then I checked the logs. The answer was there: approximately 1,000 databases on that server instance were scheduled to start their backups at nearly the same moment. All at once. All competing for the same NAS drive. The feature worked fine during development (a handful of databases), but nobody accounted for what happens when you scale it to production.
+
+**What the monitoring told us:** There’s a symptom—disk queue is in crisis.  
+**What the logs told us:** Here’s the cause—1,000 concurrent backup processes.
+
+Without both together, I would have spent hours chasing the wrong solution. I might have tweaked disk I/O settings, added caching, or blamed the NAS. Instead, the solution was simple: serialize the backups instead of running them in parallel. One line of code. But finding it required seeing the *symptom* and the *cause* together.
+
+This is why structured logging and monitoring matter.
 
 ## Structured Logging: Not Just Another Log File
 
-Imagine you’re a detective in a crime show. The logs in your application are your clues. Now, what would you prefer? A messy pile of notes or a *well-organized* file with clear, concise, and relevant information? That’s where structured logging comes in.
+The logs showed me the cause. But only because they were structured—searchable, parseable, with context. Imagine you’re debugging that same problem but your logs looked like this:
+
+```
+10:00:00 ERROR: Backup failed
+10:00:01 ERROR: Backup failed
+10:00:02 ERROR: Backup failed
+[thousands of identical lines...]
+```
+
+You’d have no idea *why*. No database IDs. No process counts. No context. You’d just see errors repeating.
 
 {% note info %}
 What do I mean by *well-organized*?
@@ -59,11 +79,13 @@ Those two tools do similar jobs, but in the end, they are not exactly the same: 
 * **Include Essential Information**: Timestamps, error codes, user IDs – the more context, the better. Don't just announce 'there was an error' - write exactly what happened.
 * **Keep It Clean**: Log what’s necessary. Too much information can be as bad as too little. What's worse, too much logs may even cause various [performance issues](https://betterprogramming.pub/logs-can-have-a-strong-impact-on-stability-performance-and-garbage-collection-fc47c600a1e0)
 
-## Monitoring: Your Software’s Health Check
+## Monitoring: Your Software’s Real-Time Dashboard
 
-Now, let’s talk about monitoring. If logging is the ‘what’ of your application’s story, monitoring is the ‘how’ and ‘when’. It’s like a health check that tells you how your application is doing at any given moment.
+Now, the monitoring. The structured logs told me *what happened and why*, but the monitoring told me it was *happening right now* and that it was *critical*. 
 
-Monitoring serves as a constant health check for your software. It's about keeping an eye on the essentials — things like disk and memory usage, cache sizes, and queue lengths. Think of it as the dashboard in your car, not just warning you when you're running on fumes (or about to crash), but also providing a regular update on the overall health of your system. It ensures your software doesn't derail unexpectedly.
+Monitoring is your real-time window into your system’s health. It’s not about historical analysis—it’s about knowing *now* that something is wrong before it becomes catastrophic. In that backup case, the Disk Queue Length spike said: "Stop. Something is thrashing the disk. Investigate immediately." Without that alert, the customer might have waited hours for someone to notice and dig into logs.
+
+Think of it as the dashboard in your car. Your gauges don’t tell you *why* the engine temperature is rising—they just tell you it’s rising. You look under the hood (logs) to understand why. But you need that dashboard (monitoring) screaming at you first.
 
 ### Key Aspects of Effective Monitoring
 
@@ -85,36 +107,27 @@ Monitoring serves as a constant health check for your software. It's about keepi
 * **Avoid Alert Saturation**: Excessive, unnecessary alerts can lead to indifference, much like the boy who cried 'wolf' in the famous fairy tale. Ensure that your alerts are meaningful and actionable.
 * **Historical Data is Gold**: Make sure to keep historical data, be it a database or tools like Kibana. Without historical data, how will you debug a critical system failure at 2am?
 
-## Structured Logging and Monitoring: Better Together
 
-When structured logging and effective monitoring work together, just like Power Rangers zords, they merge into something even more powerful. Logs provide the detailed narrative of your application’s life, while monitoring keeps an eye on the overall health and performance. Together, they ensure that you’re not just prepared for when things go wrong, but also equipped to prevent issues in the first place.
+## Why Together Matters
 
-### Better Together?
+Monitoring without logs leaves you blind to *why*. You see the symptom but not the cause. You react but don't understand.
 
-Why? Let me give you an example I have encountered. While working for a NoSQL database vendor, a seemingly weird issue landed on my desk. A server-wide backup failed.
-The customer had a server hosting numerous databases on the same instance. The server was far from being overloaded and had plenty of hardware power to spare. One day, a server-wide backup of the database service decides to fail, for some reason. Now, while rare, but such a failure isn’t new. By the way, all these databases were scheduled to start their backup journey to a NAS drive, roughly at the same cosmic moment.
+Logs without monitoring leave you slow. You might eventually piece together what happened from historical logs, but by then the damage is done. You're doing post-mortems instead of preventing fires.
 
-### Monitoring Meets Logging?
+Together, they work like this:
+1. **Monitoring alerts you** — something is wrong, *right now*
+2. **Logs explain it** — here's what's happening and why
+3. **You fix it** — fast, with confidence
 
-First, I checked the monitoring and a peculiar oddity caught my eye: disk usage stats were weird. The Disk Queue Length was really, really high. That was the first piece of the puzzle.
+That's the difference between a 30-minute incident and a 3-hour one. Between understanding your system and guessing.
 
-Checking the logs was next. It didn't take too long to find the next piece of the puzzle: about a thousand databases decided to start their backup at the same time. The feature worked flawlessly during development, but the developers simply didn't take into account the possiblity that so many databases would try to backup its data on a NAS drive.
+## One Important Note
 
-### The Aha Moment: Too Much, Too Soon
-
-Putting these pieces together – the crying-for-help disk queue length and a large amount of backups from our logs allowed me to reach a rather obvious conclusion. NAS simply timed out under the heavy load. So the solution was straight forward - I simply made the backups serial and not parallel. But that's not the moral of the story.
-
-What *is* the moral? Simple. Monitoring showed us a symptom – the Disk Queue Length. That told us **what** was wrong. But it's the logs that told us the **why** – the simultaneous backup processes. Without one complementing the other, it would likely have taken me much longer to diagnose and resolve the problem.
+What I've written here isn't a silver bullet. There are cases where the cost of implementing and maintaining structured logging and monitoring exceeds the value—especially for small, non-critical systems. But if your system is production-ready, if people depend on it, if downtime costs money or trust? These aren't optional. They're table stakes.
 
 ## Conclusion
 
-In the world of production-ready software, structured logging and monitoring are non-negotiable. They are essential because they give you the insights and foresight needed to ensure your application is not just surviving but thriving in production.
-
-{% note info %}
-
-Another thing, and it's something that I've seen happened in the past. Structured logging and monitoring should not be forgotten. They should be used to inform your development teams, contributing to a feedback loop that continuously improves your application, based on real operational data. I'd say that part of data-driven decisions about the future of your system should take data from the structured logging and monitoring.
-
-{% endnote %}
+In the world of production-ready software, structured logging and monitoring are non-negotiable. They are essential because they give you the insights and foresight needed to ensure your application is not just surviving but thriving in production. More importantly, they give you the speed and confidence to fix things before customers notice they're broken.
 
 ## Series Roadmap
 
