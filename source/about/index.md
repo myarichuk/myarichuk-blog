@@ -1,6 +1,6 @@
 I’m a systems engineer with 13+ years in .NET, specializing in low-level performance, production debugging, and building systems that actually work when it matters.
 
-For seven years, I was on the core team at Hibernating Rhinos building **RavenDB**—a distributed NoSQL database where production failures aren’t theoretical. I worked on the **Voron B-Tree storage engine**: transaction management, memory-mapped I/O, page allocation, the works. That meant debugging real customer crashes, optimizing under production load, and understanding exactly how things break at scale.
+For seven years, I was on the core team at Hibernating Rhinos working on **RavenDB**—a distributed NoSQL database where production failures aren’t theoretical. I contributed to the **Voron B-Tree storage engine**: transaction management, memory-mapped I/O, page allocation, and storage-layer optimizations. That meant debugging real customer crashes, optimizing under production load, and understanding exactly how things break at scale.
 
 Since then, I’ve spent the last 6+ years applying those same skills at three other companies—Gigya/SAP, Snyk, and a stealth startup—debugging production hangs, memory leaks, performance cliffs, and the chaos that only shows up when millions of requests hit real hardware.
 
@@ -22,4 +22,4 @@ This blog isn’t about climbing the ladder or collecting followers. It’s abou
 
 If you’ve got ideas, feedback, or you just want to talk systems engineering, debugging, or why your allocator is hot—reach out. I love this stuff.
 
-Check out my [GitHub](https://github.com/myarichuk) and my [CV](/cv/) if you want to see what I’ve built.
+Check out my [GitHub](https://github.com/myarichuk) and my [CV](/cv/) if you want to see what I’ve worked on.
