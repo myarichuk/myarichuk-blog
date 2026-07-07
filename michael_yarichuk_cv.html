@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michael Yarichuk – CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #F5F7FA;
+      --surface:      #FFFFFF;
+      --text-1:       #1C2B3A;
+      --text-2:       #5A6E85;
+      --text-3:       #8899AA;
+      --accent:       #1A56DB;
+      --achievement:  #0B7A45;
+      --pill-bg:      #EEF3FA;
+      --pill-border:  #C2D2E4;
+      --rule:         #DDE5EE;
+      --hex-color:    #C8D5E0;
+      --gutter:       60px;
+      --side-w:       268px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      font-size: 14px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── Hex gutter ─────────────────────────────────── */
+    .hex-rail {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--gutter);
+      height: 100vh;
+      overflow: hidden;
+      background: var(--surface);
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0;
+      gap: 14px;
+      z-index: 100;
+    }
+
+    .hex-addr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: var(--hex-color);
+      line-height: 1;
+      writing-mode: horizontal-tb;
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+
+    /* ── Main content ───────────────────────────────── */
+    main {
+      margin-left: var(--gutter);
+      padding: 52px 60px 80px 60px;
+      max-width: 1080px;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      margin-bottom: 44px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .name {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      line-height: 1.05;
+      color: var(--text-1);
+    }
+
+    .title-line {
+      margin-top: 7px;
+      font-size: 14.5px;
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: 0.01em;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 22px;
+      margin-top: 18px;
+    }
+
+    .contact-row a,
+    .contact-row span {
+      font-size: 12.5px;
+      color: var(--text-2);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.15s;
+    }
+
+    .contact-row a:hover { color: var(--accent); }
+
+    /* ── Body layout ────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr var(--side-w);
+      gap: 52px;
+      align-items: start;
+    }
+
+    /* ── Section label ──────────────────────────────── */
+    .section { margin-bottom: 38px; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-3);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── Employment entries ─────────────────────────── */
+    .entry { margin-bottom: 30px; }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 2px;
+    }
+
+    .entry-company {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .entry-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .entry-role {
+      font-size: 12.5px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .entry-stack {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .entry-note {
+      font-size: 11.5px;
+      color: var(--text-3);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .sub-phase {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      letter-spacing: 0.01em;
+    }
+
+    .entry ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .entry ul li {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 5px;
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.55;
+    }
+
+    .entry ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--rule);
+      font-size: 11px;
+      top: 1px;
+    }
+
+    .ach { color: var(--achievement); font-weight: 600; }
+
+    /* ── Skills sidebar ─────────────────────────────── */
+    .sidebar { position: sticky; top: 24px; }
+
+    .skill-group { margin-bottom: 22px; }
+
+    .skill-group-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-3);
+      margin-bottom: 9px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .pill {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 3px;
+      padding: 2px 8px;
+      color: var(--text-2);
+      line-height: 1.8;
+    }
+
+    .pill.accent {
+      border-color: #9AB8F0;
+      background: #EBF1FD;
+      color: var(--accent);
+    }
+
+    /* ── Profile ────────────────────────────────────── */
+    .profile-text {
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.75;
+    }
+
+    /* ── Education ──────────────────────────────────── */
+    .edu-inst {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .edu-detail {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 3px;
+    }
+
+    .int13h {
+      margin-top: 14px;
+      padding: 13px 16px;
+      background: var(--pill-bg);
+      border-left: 2.5px solid var(--accent);
+      border-radius: 0 3px 3px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.8;
+    }
+
+    .int13h strong {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+
+    /* ── Projects ───────────────────────────────────── */
+    .project { margin-bottom: 22px; }
+
+    .project-name {
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .project-name a {
+      color: var(--text-1);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .project-name a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .project-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #9B6900;
+      background: #FFF4D6;
+      border: 1px solid #F0D080;
+      border-radius: 2px;
+      padding: 1px 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    /* ── Interests ──────────────────────────────────── */
+    .interests {
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    /* ── Print ──────────────────────────────────────── */
+    @media print {
+      .hex-rail { display: none; }
+      main { margin-left: 0; padding: 24px 36px 48px; max-width: none; }
+      .sidebar { position: static; }
+      body { background: white; font-size: 12px; }
+      .layout { gap: 36px; grid-template-columns: 1fr 220px; }
+      .name { font-size: 28px; }
+      .section { margin-bottom: 24px; }
+      .entry { margin-bottom: 20px; }
+    }
+
+    @media (max-width: 768px) {
+      .hex-rail { display: none; }
+      main { margin-left: 0; padding: 32px 24px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hex address gutter — VGA framebuffer starts at 0xA000 -->
+<div class="hex-rail" id="hexRail"></div>
+
+<main>
+
+  <!-- ── Header ───────────────────────────────────── -->
+  <header>
+    <div class="name">Michael Yarichuk</div>
+    <div class="title-line">Senior Software Engineer &nbsp;·&nbsp; Systems &amp; Performance &nbsp;·&nbsp; .NET</div>
+    <div class="contact-row">
+      <a href="mailto:michael.yarichuk@gmail.com">michael.yarichuk@gmail.com</a>
+      <span>+972-54-596-7649</span>
+      <a href="https://linkedin.com/in/myarichuk" target="_blank">linkedin.com/in/myarichuk</a>
+      <a href="https://github.com/myarichuk" target="_blank">github.com/myarichuk</a>
+      <a href="https://www.graymatterdeveloper.com" target="_blank">graymatterdeveloper.com</a>
+    </div>
+  </header>
+
+  <!-- ── Two-column body ──────────────────────────── -->
+  <div class="layout">
+
+    <!-- ── Left: main content ───────────────────── -->
+    <div class="content-main">
+
+      <!-- Profile -->
+      <div class="section">
+        <div class="section-label">Profile</div>
+        <p class="profile-text">
+          Senior software engineer and systems programmer with 13+ years of .NET experience,
+          specialising in high-performance and low-level engineering: zero-allocation patterns,
+          database storage internals, crash and core dump analysis, and memory subsystem design.
+          Spent seven years contributing to RavenDB and its Voron B-Tree storage engine at
+          Hibernating Rhinos. Builds production libraries benchmarked against hand-optimised baselines.
+          Autodidact since age&nbsp;12 — the kind who goes straight to the source: RBIL, processor manuals, WinDbg.
+        </p>
+      </div>
+
+      <!-- Employment -->
+      <div class="section">
+        <div class="section-label">Experience</div>
+
+        <!-- Bindecy -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-company">Stealth Startup &nbsp;<span style="font-weight:400;color:var(--text-3);font-size:13px;">(Cybersecurity)</span></div>
+            <div class="entry-period">2022 – present</div>
+          </div>
+          <div class="entry-stack">.NET 6/7/8 · C# · Docker · containerised microservices on-prem · Node.js</div>
+          <div class="entry-note">Company name and product details are NDA/MoD export-constrained. Listed as "stealth startup" on LinkedIn at company's request.</div>
+
+          <div class="sub-phase">Team Lead / Engineering Manager &nbsp;&mdash;&nbsp; 2022–2023</div>
+          <ul>
+            <li>Managed a small agile team: goal-setting, KPIs, sprint planning, code reviews, and mentoring 3–4 engineers across .NET and Node.js stacks</li>
+            <li>Stayed hands-on throughout — no pure-management overhead; continued designing and shipping features in parallel</li>
+            <li>After ~1.5 years, transitioned to Tech Lead by mutual agreement — IC contribution was the higher-leverage use of time</li>
+          </ul>
+
+          <div class="sub-phase" style="margin-top:14px;">Tech Lead / Senior Backend Engineer &nbsp;&mdash;&nbsp; 2023–present</div>
+          <ul>
+            <li>Technical lead for an on-premises containerised .NET microservice platform; responsible for architectural decisions, cross-service integration design, and performance strategy</li>
+            <li>Sole engineer with Node.js experience on the team — took full ownership of the Node.js service: feature development, maintenance, performance work, and production incidents</li>
+            <li>Post-mortem investigation of production <strong>hangs</strong> and <strong>managed memory leaks</strong> — including timer-queue-rooted <code>CancellationTokenSource</code> leaks and finalizer-thread starvation — using WinDbg/SOS and memory heap snapshots</li>
+            <li>Triaged <strong>SELECT N+1</strong> issues across microservice boundaries; identified query fan-out patterns causing latency spikes under real production load</li>
+            <li>Established BenchmarkDotNet-based benchmarking culture; systematically identified and eliminated allocation hotspots in hot-path .NET services</li>
+          </ul>
+        </div>
+
+        <!-- Snyk -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-company">Snyk</div>
+            <div class="entry-period">2021 – 2022</div>
+          </div>
+          <div class="entry-role">Senior Backend Software Developer</div>
+          <div class="entry-stack">TypeScript · Node.js · .NET · dependency graph analysis</div>
+          <ul>
+            <li>Contributed to open-source dependency scanning across three language ecosystems: <strong>.NET</strong> (NuGet, <code>.csproj</code>/lock file resolution), <strong>Python</strong> (pip, <code>requirements.txt</code>, Poetry, <code>pyproject.toml</code>), and <strong>Node.js</strong> (npm/yarn, transitive resolution)</li>
+            <li>Navigated and extended a large-scale legacy TypeScript codebase; maintained correctness of multi-layer dependency graph resolution logic under active feature development</li>
+          </ul>
+        </div>
+
+        <!-- Gigya/SAP -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-company">Gigya / SAP</div>
+            <div class="entry-period">2020 – 2022</div>
+          </div>
+          <div class="entry-role">Senior Backend Software Developer</div>
+          <div class="entry-stack">.NET · C# · microservices · identity management at scale</div>
+          <ul>
+            <li>Designed and built features across a high-volume microservice platform handling millions of identity events per day</li>
+            <li>Performance analysis and post-mortem investigation of production issues; full-stack work spanning backend services and internal tooling</li>
+          </ul>
+        </div>
+
+        <!-- Hibernating Rhinos -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-company">Hibernating Rhinos</div>
+            <div class="entry-period">2013 – 2020</div>
+          </div>
+          <div class="entry-role">Server/Client Developer · Support Engineer</div>
+          <div class="entry-stack">.NET · C# · RavenDB · Voron B-Tree storage engine · LMDB · memory-mapped I/O</div>
+          <ul>
+            <li>One of the longest-tenured engineers on the RavenDB core team — <span class="ach">7 years</span> on a production NoSQL database and its storage engine</li>
+            <li>Implemented and maintained features in the <strong>Voron</strong> B-Tree storage engine: tree structure, transaction management, memory-mapped I/O, page management</li>
+            <li>Designed and built client-side and server-side API components across multiple RavenDB major versions; worked across the full stack from the wire protocol down to storage</li>
+            <li>Provided direct technical support to enterprise customers; diagnosed and resolved storage-layer bugs under production pressure</li>
+          </ul>
+        </div>
+
+        <!-- Early career -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-company">Early Career</div>
+            <div class="entry-period">2010 – 2013</div>
+          </div>
+          <div class="entry-note" style="margin-top:4px;">
+            Junior developer roles including internal tooling and web development;
+            concurrent with intensive self-directed study in systems programming and .NET internals.
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="section">
+        <div class="section-label">Education</div>
+        <div class="edu-inst">Technion – Israel Institute of Technology</div>
+        <div class="edu-detail">Physics B.Sc. &nbsp;·&nbsp; Attended ~4 semesters, did not complete &nbsp;·&nbsp; Left to work; family financial constraints</div>
+        <div class="int13h">
+          <strong>Self-taught since ~age 12.</strong><br>
+          12th-grade final project: a fully self-implemented paint application in C++ under DOS —
+          trigonometry-based shape rendering,
+          <strong>INT 10h, AX=0x0013</strong> (320×200, 256 colour),
+          writing pixels directly into VGA framebuffer memory at <strong>0xA000:0000</strong>.
+          No libraries. No tutorials. Just Peter Norton's book, the RBIL, a compiler, and a lot of time.
+        </div>
+      </div>
+
+      <!-- Personal Projects -->
+      <div class="section">
+        <div class="section-label">Projects</div>
+
+        <div class="project">
+          <div class="project-name">
+            <a href="https://github.com/myarichuk/SharpArena" target="_blank">SharpArena</a>
+          </div>
+          <div class="project-desc">
+            Zero-allocation arena allocator for high-performance .NET. Linked-list-of-segments bump allocator
+            backed by <code>NativeMemory</code>, with built-in collections: <code>ArenaList&lt;T&gt;</code>,
+            <code>ArenaPtrStack&lt;T&gt;</code>, <code>ArenaUtf16String</code> (content-based equality, zero managed allocation).
+            Ships with a symbolic math parser as a real-world stress test.
+            Fully compatible with <strong>Blazor WebAssembly</strong> — no virtual memory APIs in the hot path.
+            53 releases.
+          </div>
+        </div>
+
+        <div class="project">
+          <div class="project-name">
+            <a href="https://github.com/myarichuk/MongoZen" target="_blank">MongoZen</a>
+          </div>
+          <div class="project-desc">
+            Identity Map + Unit of Work ORM for MongoDB in .NET.
+            Roslyn source generators wire up <code>DbSet&lt;T&gt;</code> at compile time — zero reflection on the hot path.
+            Change tracking uses an unmanaged arena-backed diffing engine with a zero-alloc <code>DocId</code> discriminated union fingerprint struct.
+            Benchmarked against hand-optimised raw driver code:
+            <span class="ach">~50–100× faster</span> on repeated reads (Identity Map cache),
+            <span class="ach">33% faster and 7% less allocated</span> on ReadAndModify vs. hand-written <code>BulkWrite</code>.
+          </div>
+        </div>
+
+        <div class="project">
+          <div class="project-name">
+            <a href="https://github.com/myarichuk/campaignvault" target="_blank">CampaignVault</a>
+            <span class="project-tag">WIP</span>
+          </div>
+          <div class="project-desc">
+            AI-assisted D&amp;D campaign management tool — session tracking, NPC and world-state consistency,
+            AI-driven narrative assistance. Exploring multi-agent orchestration for DM support workflows.
+          </div>
+        </div>
+      </div>
+
+      <!-- Writing -->
+      <div class="section">
+        <div class="section-label">Writing</div>
+        <p class="profile-text">
+          <a href="https://www.graymatterdeveloper.com" target="_blank" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--pill-border);">graymatterdeveloper.com</a>
+          &nbsp;— 33 posts covering .NET debugging and post-mortem analysis, production systems engineering,
+          performance profiling, design patterns, and C++ internals.
+          Highlights include a multi-part <em>Production-Ready</em> series (memory dump tooling, structured logging,
+          performance metrics, testing strategy) and hands-on debugging write-ups.
+          Cadence is uneven — a daughter recently arrived who has discovered that closing a laptop lid is the most effective scheduling mechanism available to her.
+        </p>
+      </div>
+
+      <!-- Interests -->
+      <div class="section">
+        <div class="section-label">Interests</div>
+        <div class="interests">
+          Systems programming for fun. Fantasy &amp; sci-fi literature. Strategy games — chess, 4X, CRPGs.
+          TTRPGs; currently building tooling for them.
+        </div>
+      </div>
+
+    </div><!-- /content-main -->
+
+    <!-- ── Right: sidebar ────────────────────────── -->
+    <aside class="sidebar">
+
+      <div class="section">
+        <div class="section-label">Languages</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill accent">C#</span>
+            <span class="pill accent">.NET</span>
+            <span class="pill">C++</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">Node.js</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Low-level .NET</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill accent">Span&lt;T&gt;</span>
+            <span class="pill accent">NativeMemory</span>
+            <span class="pill">unsafe code</span>
+            <span class="pill">stackalloc</span>
+            <span class="pill">unmanaged generics</span>
+            <span class="pill">struct layout</span>
+            <span class="pill">pinned memory</span>
+            <span class="pill">memory-mapped I/O</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Platform</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill">.NET Core</span>
+            <span class="pill">.NET 6–10</span>
+            <span class="pill">Blazor WASM</span>
+            <span class="pill">ASP.NET Core</span>
+            <span class="pill">WCF</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Databases</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill accent">Voron (B-Tree)</span>
+            <span class="pill accent">RavenDB</span>
+            <span class="pill">MongoDB</span>
+            <span class="pill">MS-SQL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Tooling</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill">Roslyn Source Gen</span>
+            <span class="pill">BenchmarkDotNet</span>
+            <span class="pill">WinDbg / SOS</span>
+            <span class="pill">Testcontainers</span>
+            <span class="pill">Docker</span>
+            <span class="pill">Git</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Specialisations</div>
+        <div class="skill-group">
+          <div class="pills">
+            <span class="pill accent">Zero-alloc design</span>
+            <span class="pill accent">Perf profiling</span>
+            <span class="pill">Crash dump analysis</span>
+            <span class="pill">Core dump analysis</span>
+            <span class="pill">Concurrent systems</span>
+            <span class="pill">Storage engine internals</span>
+            <span class="pill">Compile-time codegen</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div><!-- /layout -->
+</main>
+
+<script>
+  // Populate hex gutter starting at VGA framebuffer segment 0xA000
+  (function() {
+    const rail = document.getElementById('hexRail');
+    const height = window.innerHeight;
+    const itemHeight = 14 + 14; // font + gap
+    const count = Math.floor(height / itemHeight) + 4;
+    let addr = 0xA000;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'hex-addr';
+      el.textContent = '0x' + addr.toString(16).toUpperCase().padStart(4, '0');
+      rail.appendChild(el);
+      // increment by plausible-ish offsets
+      addr += 0x0013 + (i % 3 === 0 ? 0x0006 : 0);
+    }
+  })();
+</script>
+</body>
+</html>
