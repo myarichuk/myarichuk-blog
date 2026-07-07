@@ -28,7 +28,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;Oh, but it works on my machine! What gives?! Today, I found myself asking the uncaring monitor over and over again, while adding logs</summary>
+    <summary type="html">&lt;p&gt;Oh, but it works on my machine! Today, I found myself staring at the monitor, adding logs and reviewing existing ones, carefully</summary>
         
       
     
@@ -88,8 +88,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;Let’s delve into the most crucial, non-negotiable aspect of &lt;em&gt;production-ready&lt;/em&gt; systems: Testing.&lt;/p&gt;
-&lt;p&gt;In my experience,</summary>
+    <summary type="html">&lt;p&gt;Early in my career, I joined a team that had extensive test coverage—hundreds of unit and functional tests with reasonable mocks.</summary>
         
       
     
@@ -122,7 +121,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;Local debugging? That’s easy. You’ve got your breakpoints, variable inspections, and on-the-fly state changes, provided you’ve got the</summary>
+    <summary type="html">&lt;p&gt;You’ll never need memory dumps. Until you do. And then it’s the only tool that saves you.&lt;/p&gt;
+&lt;p&gt;In our microservice architecture, we</summary>
         
       
     
@@ -155,7 +155,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;Here’s a curious challenge I faced at Hibernating Rhinos, as part of the core team for the &lt;a href=&quot;https://ravendb.net/&quot;&gt;NoSQL database</summary>
+    <summary type="html">&lt;p&gt;At RavenDB, I debugged a customer’s query that was taking several seconds to complete. The server-side processing was fast. But</summary>
         
       
     
@@ -188,7 +188,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;Hey there! In the &lt;a href=&quot;https://www.graymatterdeveloper.com/2023/11/11/production-ready-intro/&quot;&gt;previous post&lt;/a&gt; of the series, we</summary>
+    <summary type="html">&lt;p&gt;At RavenDB, I spent nights debugging failures where logs and monitoring seemed to contradict each other. One said “disk queue is</summary>
         
       
     
@@ -221,7 +221,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;In the tech world, the term ‘production-ready’ often gets tossed around, sometimes more like a hot potato than a clear standard. But</summary>
+    <summary type="html">&lt;p&gt;For over a decade, I’ve worked on systems where production failures aren’t theoretical—where you debug crashes at 2am, optimize under</summary>
         
       
     
