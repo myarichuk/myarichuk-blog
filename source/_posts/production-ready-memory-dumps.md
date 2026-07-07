@@ -49,20 +49,53 @@ Without a dump in that gRPC case, we would have spent days guessing. With one, t
 
 ## How to Read a Memory Dump
 
-For .NET, I’ve written a [post](https://www.graymatterdeveloper.com/2020/02/12/setting-up-windbg/) on getting started with dump analysis. The key tools:
+### .NET Dumps: Windows
 
-- **dotnet-dump** (command-line dump analyzer) — look at task stacks, object references, GC heap
-- **WinDbg** (Windows debugger) — more powerful, steeper learning curve, but incredibly detailed
-- **Visual Studio Debugger** — if you can open the dump in VS, it’s the most familiar interface
+The easiest approach for .NET dumps on Windows is **Visual Studio**. Open the dump file directly in VS, and it shows you:
 
-For other platforms:
+- **Threads window** — all running threads with their call stacks
+- **Tasks window** — C# Task objects and where they’re stuck (this is what caught the gRPC hang)
+- **Managed Objects** — the heap, what’s alive, what’s referencing what
+- **Memory regions** — raw memory view if you need it
 
-* Java: heap dumps with JDK tools, analyze with Eclipse Memory Analyzer or YourKit
-* JavaScript/Node.js: heap snapshots with Chrome DevTools or node --inspect
-* Python: tools like Py-Spy or memory profilers
+In the gRPC case, I opened the dump in Visual Studio, went to the Threads window, and immediately saw tasks stuck on channel allocation. The call stack showed exactly which gRPC code was waiting and why.
+
+If you want command-line analysis or don’t have VS, use:
+- **dotnet-dump** — CLI tool, looks at task stacks, heap, GC state
+- **WinDbg** — more powerful but steeper learning curve
+
+I’ve written a [post](https://www.graymatterdeveloper.com/2020/02/12/setting-up-windbg/) on WinDbg setup if you want to go deeper.
+
+### .NET Core Dumps: Linux (with lldb + SOS)
+
+If your .NET app is running on Linux (which it probably is if you’re containerized), you’ll get core dumps, not minidumps. Analyzing them is different:
+
+**Capturing:**
+```bash
+dotnet-dump collect -p <pid>  # or let coredump handlers write to disk
+```
+
+**Analyzing with lldb + SOS:**
+```bash
+lldb ./myapp /path/to/coredump
+(lldb) plugin load /usr/share/dotnet/sos/sos.so
+(lldb) clrstack     # see managed call stacks
+(lldb) dumpheap     # analyze heap
+(lldb) dumpobj      # inspect specific objects
+```
+
+The **SOS extension** (Sequence Object Syntax) is your interface to .NET runtime state inside lldb. `clrstack` shows you managed code stacks (not just native stacks), which is critical—otherwise you’re staring at P/Invoke frames and nothing useful.
+
+For the gRPC hang on Linux, `clrstack` on all threads would have shown the same picture: tasks stuck waiting for channel allocation.
+
+### Core Dumps: Other Platforms
+
+* **Java**: jcmd captures heap dumps; analyze with Eclipse Memory Analyzer or YourKit
+* **JavaScript/Node.js**: heap snapshots with Chrome DevTools or `--inspect` flag
+* **Python**: memory profilers or tools like Py-Spy
 
 {% note info %}
-The specific tool matters less than understanding what you’re looking at. Task/thread stacks, object references, and heap allocation patterns tell the same story across all languages.
+The specific tool varies, but the principle is the same everywhere: you’re looking at task/thread stacks to see where execution is stuck, and at the heap to see what objects are alive and using memory.
 {% endnote %}
 
 ## Capturing Dumps in Production
